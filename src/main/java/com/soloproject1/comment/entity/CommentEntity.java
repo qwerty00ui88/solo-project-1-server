@@ -1,7 +1,6 @@
-package com.soloproject1.content.entity;
+package com.soloproject1.comment.entity;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,41 +20,21 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
-@Table(name = "content")
+@Builder(toBuilder = true)
+@Table(name = "comment")
 @Entity
-public class ContentEntity {
+public class CommentEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@Column(name = "tmdbId")
-	private int tmdbId;
-
-	@Column(name = "mediaType")
-	private String mediaType;
-
-	private String title;
-
-	@Column(name = "originalTitle")
-	private String originalTitle;
-
-	@Column(name = "releaseDate")
-	private Date releaseDate;
-
-	@Column(name = "posterPath")
-	private String posterPath;
-
-	@Column(name = "backdropPath")
-	private String backdropPath;
-
-	private Double popularity;
-
-	@Column(name = "voteAverage")
-	private Double voteAverage;
-
-	@Column(name = "voteCount")
-	private Integer voteCount;
+	
+	@Column(name = "contentId")
+	private int contentId;
+	
+	@Column(name = "userId")
+	private int userId;
+	
+	private String text;
 	
 	@UpdateTimestamp
 	@Column(name = "createdAt", updatable = false)
