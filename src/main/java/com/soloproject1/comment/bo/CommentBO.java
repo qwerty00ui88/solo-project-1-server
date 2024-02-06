@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.soloproject1.comment.domain.CommentView;
 import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.comment.repository.CommentRepository;
+import com.soloproject1.content.bo.ContentBO;
+import com.soloproject1.content.entity.ContentEntity;
 
 @Service
 public class CommentBO {
@@ -16,11 +18,20 @@ public class CommentBO {
 	@Autowired
 	private CommentRepository commentRepository;
 
-	public CommentEntity addComment(int userId, int contentId, String text) {
+	@Autowired
+	private ContentBO contentBO;
 
-		CommentEntity comment = CommentEntity.builder().userId(userId).contentId(contentId).text(text).build();
+	public CommentEntity addComment(int userId, String mediaType, int tmdbId, String text) {
 
-		return commentRepository.save(comment);
+		Integer contentId = null;
+		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		if (content == null) {
+			contentId = contentBO.addContent(mediaType, tmdbId);
+		} else {
+			contentId = content.getId();
+		}
+
+		return commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
 	}
 
 	public CommentEntity updateCommentById(int commentId, String text) {
@@ -42,23 +53,22 @@ public class CommentBO {
 		}
 
 	}
-	
+
 	public List<CommentView> generateCommentViewListByContentId(int contentId) {
 		List<CommentView> commentViewList = new ArrayList<>();
-		
+
 		List<CommentEntity> commentList = commentRepository.findByContentId(contentId);
-		
-		for(CommentEntity comment : commentList) {
+
+		for (CommentEntity comment : commentList) {
 			CommentView commentView = new CommentView();
-			
+
 			// @@@ 회원 정보 삽입
-			
+
 			// 댓글 삽입
 			commentView.setComment(comment);
-			
 			commentViewList.add(commentView);
 		}
-		
+
 		return commentViewList;
 	}
 

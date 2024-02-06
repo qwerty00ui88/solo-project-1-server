@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.entity.CommentEntity;
+import com.soloproject1.content.bo.ContentBO;
+import com.soloproject1.content.entity.ContentEntity;
 
 @RequestMapping("/comment")
 @RestController
@@ -21,21 +23,21 @@ public class CommentRestController {
 	@Autowired
 	private CommentBO commentBO;
 
+	@Autowired
+	private ContentBO contentBO;
+
 	@PostMapping("/create")
 	public Map<String, Object> createComment(@RequestBody Map<String, Object> request) {
-		int tmdbId = (int) request.get("tmdbId");
 		String mediaType = (String) request.get("mediaType");
+		int tmdbId = (int) request.get("tmdbId");
 		String text = (String) request.get("text");
 
 		Map<String, Object> result = new HashMap<>();
 
-		// @@@ content 테이블에 tmdbId, mediaType와 같은 행이 없을 경우 -> content 테이블에 추가
-
 		int userId = 1; // @@@ 추후 세션에서 받아오는 것으로 변경 예정
-		int contentId = 1; // @@@ 추후 content 테이블에서 받아오는 것으로 변경 예정
 
 		// DB INSERT
-		CommentEntity addedComment = commentBO.addComment(userId, contentId, text);
+		CommentEntity addedComment = commentBO.addComment(userId, mediaType, tmdbId, text);
 
 		// 응답값
 		if (addedComment != null) {
@@ -75,7 +77,7 @@ public class CommentRestController {
 
 		// DB DELETE
 		commentBO.deleteCommentById(commentId);
-		
+
 		// 응답값
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);

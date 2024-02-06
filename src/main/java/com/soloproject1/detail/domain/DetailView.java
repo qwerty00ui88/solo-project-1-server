@@ -11,6 +11,9 @@ import lombok.ToString;
 @Data
 public class DetailView {
 	
+	private String recommendStatus;
+	private boolean isFavorite;
+	
 	private List<CommentView> goodCommentViewList;
 	private List<CommentView> badCommentViewList;
 	private List<CommentView> unratedCommentViewList;

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soloproject1.recommend.mapper.RecommendMapper">
+	<insert id="insertRecommend" parameterType="map">
+		INSERT INTO `recommend`
+		(
+			`contentId`
+			, `userId`
+			, `status`
+			, `createdAt`
+			, `updatedAt`
+		)
+		VALUES
+		(
+			#{contentId}
+			, #{userId}
+			, #{status}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+	
+	<select id="selectRecommendByUserIdAndContentId" parameterType="map" resultType="com.soloproject1.recommend.domain.Recommend">
+		SELECT
+			`contentId`
+			, `userId`
+			, `status`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`recommend`
+		WHERE
+			`contentId` = #{contentId}
+			AND `userId` = #{userId}
+	</select>
+	
+	<update id="updateRecommendByUserIdAndContentId" parameterType="map">
+		UPDATE `recommend`
+		SET
+			`status` = #{status}
+			, `updatedAt` = NOW()
+		WHERE
+			`contentId` = #{contentId}
+			AND `userId` = #{userId}
+	</update>
+	<delete id="deleteRecommendByUserIdAndContentId" parameterType="map">
+		DELETE FROM
+			`recommend`
+		WHERE
+			`contentId` = #{contentId}
+			AND `userId` = #{userId}
+	</delete>
+</mapper>
