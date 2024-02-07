@@ -1,4 +1,4 @@
-package com.soloproject1.content.entity;
+package com.soloproject1.comment.entity;
 
 import java.time.ZonedDateTime;
 
@@ -20,21 +20,27 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
-@Table(name = "content")
+@Builder(toBuilder = true)
+@Table(name = "comment")
 @Entity
-public class ContentEntity {
+public class CommentEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "mediaType")
-	private String mediaType;
+	@Column(name = "contentId")
+	private int contentId;
 	
-	@Column(name = "tmdbId")
-	private int tmdbId;
+	@Column(name = "userId")
+	private int userId;
+	
+	private String text;
 	
 	@UpdateTimestamp
 	@Column(name = "createdAt", updatable = false)
 	private ZonedDateTime createdAt;
+	
+	@UpdateTimestamp
+	@Column(name = "updatedAt")
+	private ZonedDateTime updatedAt;
 }

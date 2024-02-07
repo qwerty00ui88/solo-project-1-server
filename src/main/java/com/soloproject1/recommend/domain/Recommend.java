@@ -1,4 +1,4 @@
-package com.soloproject1.comment.domain;
+package com.soloproject1.recommend.domain;
 
 import java.time.ZonedDateTime;
 
@@ -7,11 +7,10 @@ import lombok.ToString;
 
 @ToString
 @Data
-public class Comment {
-	private int id;
+public class Recommend {
 	private int contentId;
 	private int userId;
-	private String text;
+	private String status;
 	private ZonedDateTime createdAt;
 	private ZonedDateTime updatedAt;
 }

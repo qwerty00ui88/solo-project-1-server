@@ -1,13 +1,26 @@
 package com.soloproject1;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+// @SpringBootTest
 class SoloProject1ApplicationTests {
 
+//	@Test
+//	void contextLoads() {
+//	}
+	
 	@Test
-	void contextLoads() {
+	void 더하기테스트() {
+		log.info("$$$$$$$$$$ 더하기 테스트 시작");
+		int a = 10;
+		int b = 20;
+		
+		assertEquals(20, a + b);
 	}
 
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soloproject1.user.mapper.UserMapper">
+	<insert id="insertUser" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `user`
+		(
+			`name`
+			, `nickname`
+			, `email`
+			, `emailAuthentication`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		)
+		VALUES
+		(
+			#{name}
+			, #{nickname}
+			, #{email}
+			, #{emailAuthentication}
+			, #{password}
+			, #{birth}
+			, #{gender}
+			, #{region}
+			, #{profileImagePath}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+</mapper>
