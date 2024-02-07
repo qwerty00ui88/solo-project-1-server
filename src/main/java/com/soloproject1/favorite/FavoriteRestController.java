@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.soloproject1.favorite.bo.FavoriteBO;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 public class FavoriteRestController {
 
@@ -19,9 +21,10 @@ public class FavoriteRestController {
 	@RequestMapping("/favorite")
 	public Map<String, Object> favoriteToggle(
 			@RequestParam("mediaType") String mediaType,
-			@RequestParam("tmdbId") int tmdbId) {
+			@RequestParam("tmdbId") int tmdbId,
+			HttpSession session) {
 		
-		int userId = 1; // @@@ 추후 세션에서 가져올 예정
+		int userId = (int)session.getAttribute("userId");
 		
 		favoriteBO.favoriteToggle(userId, mediaType, tmdbId);
 		

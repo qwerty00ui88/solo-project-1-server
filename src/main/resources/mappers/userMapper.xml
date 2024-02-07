@@ -32,4 +32,46 @@
 			, NOW()
 		)
 	</insert>
+	
+	<select id="selectUserByNicknamePassword" parameterType="map" resultType="com.soloproject1.user.domain.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `email`
+			, `emailAuthentication`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`nickname` = #{nickname}
+			AND `password` = #{password}
+	</select>
+	
+	<select id="selectUserByUserId" parameterType="int" resultType="com.soloproject1.user.domain.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `email`
+			, `emailAuthentication`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`id` = #{id}
+	</select>
+	
 </mapper>

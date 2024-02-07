@@ -9,7 +9,9 @@ import lombok.ToString;
 @Data
 public class CommentView {
 	
-	// @@@ user
+	private int userId;
+	
+	private String nickname;
 	
 	private CommentEntity comment;
 	

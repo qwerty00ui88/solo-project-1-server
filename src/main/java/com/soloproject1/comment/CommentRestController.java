@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.content.bo.ContentBO;
-import com.soloproject1.content.entity.ContentEntity;
+
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/comment")
 @RestController
@@ -27,19 +28,20 @@ public class CommentRestController {
 	private ContentBO contentBO;
 
 	@PostMapping("/create")
-	public Map<String, Object> createComment(@RequestBody Map<String, Object> request) {
+	public Map<String, Object> createComment(
+			@RequestBody Map<String, Object> request,
+			HttpSession session) {
 		String mediaType = (String) request.get("mediaType");
 		int tmdbId = (int) request.get("tmdbId");
 		String text = (String) request.get("text");
 
-		Map<String, Object> result = new HashMap<>();
-
-		int userId = 1; // @@@ 추후 세션에서 받아오는 것으로 변경 예정
+		int userId = (int)session.getAttribute("userId");
 
 		// DB INSERT
 		CommentEntity addedComment = commentBO.addComment(userId, mediaType, tmdbId, text);
-
+		
 		// 응답값
+		Map<String, Object> result = new HashMap<>();
 		if (addedComment != null) {
 			result.put("code", 200);
 			result.put("result", "성공");

@@ -11,6 +11,8 @@ import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
+import com.soloproject1.user.bo.UserBO;
+import com.soloproject1.user.domain.User;
 
 @Service
 public class CommentBO {
@@ -21,6 +23,9 @@ public class CommentBO {
 	@Autowired
 	private ContentBO contentBO;
 
+	@Autowired
+	private UserBO userBO;
+	
 	public CommentEntity addComment(int userId, String mediaType, int tmdbId, String text) {
 
 		Integer contentId = null;
@@ -32,9 +37,11 @@ public class CommentBO {
 		}
 
 		return commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+	
 	}
 
 	public CommentEntity updateCommentById(int commentId, String text) {
+		
 		CommentEntity comment = commentRepository.findById(commentId).orElse(null);
 
 		if (comment != null) {
@@ -46,6 +53,7 @@ public class CommentBO {
 	}
 
 	public void deleteCommentById(int commentId) {
+		
 		CommentEntity comment = commentRepository.findById(commentId).orElse(null);
 
 		if (comment != null) {
@@ -62,10 +70,17 @@ public class CommentBO {
 		for (CommentEntity comment : commentList) {
 			CommentView commentView = new CommentView();
 
-			// @@@ 회원 정보 삽입
-
-			// 댓글 삽입
+			int userId = comment.getUserId();
+			
+			// userId 세팅
+			commentView.setUserId(userId);
+			
+			// nickname 세팅
+			commentView.setNickname(userBO.getUserByUserId(userId).getNickname());
+			
+			// 코멘트 리스트 세팅
 			commentView.setComment(comment);
+			
 			commentViewList.add(commentView);
 		}
 

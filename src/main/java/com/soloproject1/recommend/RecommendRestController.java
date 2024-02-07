@@ -13,6 +13,8 @@ import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 public class RecommendRestController {
 
@@ -23,10 +25,13 @@ public class RecommendRestController {
 	private ContentBO contentBO;
 
 	@GetMapping("/recommend")
-	public Map<String, Object> recommend(@RequestParam("mediaType") String mediaType,
-			@RequestParam("tmdbId") int tmdbId, @RequestParam("status") String status) {
+	public Map<String, Object> recommend(
+			@RequestParam("mediaType") String mediaType,
+			@RequestParam("tmdbId") int tmdbId, 
+			@RequestParam("status") String status,
+			HttpSession session) {
 
-		int userId = 1;// @@@ 추후 세션으로 변경
+		int userId = (int)session.getAttribute("userId");
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
