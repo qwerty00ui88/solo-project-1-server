@@ -12,7 +12,7 @@ public class User {
 	private String name;
 	private String nickname;
 	private String email;
-	private boolean emailAuthentication;
+	private Boolean emailVerified;
 	private String password;
 	private int birth;
 	private String gender;
