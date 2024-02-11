@@ -56,7 +56,7 @@ public class EmailVerificationBO {
 			return false;
 		}
 
-		// 성공
+		// 성공 => 토큰 삭제
 		emailVerificationRepository.delete(emailVerification);
 		return true;
 	}
