@@ -59,7 +59,7 @@ public class UserRestController {
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
 
-			Cookie sessionCookie = new Cookie("userId", session.getId());
+			Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
 			sessionCookie.setPath("/");
 			response.addCookie(sessionCookie);
 
