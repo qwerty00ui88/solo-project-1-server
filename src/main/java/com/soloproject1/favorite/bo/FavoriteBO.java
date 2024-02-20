@@ -1,5 +1,7 @@
 package com.soloproject1.favorite.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +46,8 @@ public class FavoriteBO {
 		}
 	}
 	
+	public List<Favorite> getFavoriteListByUserId(int userId) {
+		return favoriteMapper.selectFavoriteListByUserId(userId);
+	}
 	
 }
