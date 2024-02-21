@@ -35,8 +35,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Bean
 	public WebClient webClient() {
+		String baseUrl = env.getProperty("tmdb.baseUrl");
 		String authToken = env.getProperty("tmdb.authToken");
-		return WebClient.builder().baseUrl("https://api.themoviedb.org/3/").defaultHeader("Authorization", authToken).build();
+		return WebClient.builder().baseUrl(baseUrl).defaultHeader("Authorization", authToken).build();
 	}
 
 }

@@ -12,7 +12,6 @@ import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.user.bo.UserBO;
-import com.soloproject1.user.domain.User;
 
 @Service
 public class CommentBO {
@@ -85,6 +84,10 @@ public class CommentBO {
 		}
 
 		return commentViewList;
+	}
+	
+	public List<CommentEntity> getcommentListByUserId(int userId) {
+		return commentRepository.findByUserId(userId);
 	}
 
 }

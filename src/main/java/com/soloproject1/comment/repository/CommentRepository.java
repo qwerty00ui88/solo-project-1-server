@@ -10,4 +10,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
 	
 	public List<CommentEntity> findByContentId(int contentId);
 	
+	public List<CommentEntity> findByUserId(int userId);
+	
 }

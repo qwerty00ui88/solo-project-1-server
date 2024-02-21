@@ -44,6 +44,7 @@
 			`contentId` = #{contentId}
 			AND `userId` = #{userId}
 	</update>
+	
 	<delete id="deleteRecommendByUserIdAndContentId" parameterType="map">
 		DELETE FROM
 			`recommend`
@@ -51,4 +52,19 @@
 			`contentId` = #{contentId}
 			AND `userId` = #{userId}
 	</delete>
+	
+	<select id="selectRecommendListByUserId" parameterType="int" resultType="com.soloproject1.recommend.domain.Recommend">
+		SELECT
+			`contentId`
+			, `userId`
+			, `status`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`recommend`
+		WHERE
+			`userId` = #{userId}
+		ORDER BY
+			`updatedAt` DESC
+	</select>
 </mapper>

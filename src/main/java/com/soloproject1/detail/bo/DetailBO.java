@@ -52,7 +52,7 @@ public class DetailBO {
 			}
 
 			// 인생 컨텐츠 등록 여부
-			detailView.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) == null);
+			detailView.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
 		}
 		
 		// 코멘트

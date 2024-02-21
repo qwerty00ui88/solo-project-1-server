@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.soloproject1.content.dto.ContentDetailDTO;
+import com.soloproject1.content.dto.ContentDTO;
+import com.soloproject1.content.dto.MovieDTO;
+import com.soloproject1.content.dto.TVDTO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.content.repository.ContentRepository;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class ContentBO {
@@ -15,8 +19,8 @@ public class ContentBO {
 	private ContentRepository contentRepository;
 
 	@Autowired
-    private WebClient webClient;
-	
+	private WebClient webClient;
+
 	public int addContent(String mediaType, int tmdbId) {
 		ContentEntity content = contentRepository
 				.save(ContentEntity.builder().mediaType(mediaType).tmdbId(tmdbId).build());
@@ -31,10 +35,20 @@ public class ContentBO {
 		return contentRepository.findById(id).orElse(null);
 	}
 
-	public ContentDetailDTO getContentDetail(String mediaType, int tmdbId) {
-		ContentDetailDTO contentDetail = webClient.get().uri(mediaType + "/" + String.valueOf(tmdbId)).retrieve()
-				.bodyToMono(ContentDetailDTO.class).block();
-		return contentDetail;
+	public ContentDTO getContentDetail(String mediaType, int tmdbId) {
+
+		if (mediaType.equals("movie")) {
+			ContentDTO contentDetail = (ContentDTO) webClient.get().uri(mediaType + "/" + String.valueOf(tmdbId))
+					.retrieve().bodyToMono(MovieDTO.class).block();
+			contentDetail.setMediaType(mediaType);
+			return contentDetail;
+		} else {
+			ContentDTO contentDetail = (ContentDTO) webClient.get().uri(mediaType + "/" + String.valueOf(tmdbId))
+					.retrieve().bodyToMono(TVDTO.class).block();
+			contentDetail.setMediaType(mediaType);
+			return contentDetail;
+		}
+
 	}
 
 }
