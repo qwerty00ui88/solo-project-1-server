@@ -12,19 +12,24 @@ import com.soloproject1.favorite.mapper.FavoriteMapper;
 
 @Service
 public class FavoriteBO {
-	
+
 	@Autowired
 	private FavoriteMapper favoriteMapper;
-	
+
 	@Autowired
 	private ContentBO contentBO;
-	
-	public Favorite getFavoriteByContentIdUserId (int contentId, int userId) {
+
+	public Favorite getFavoriteByContentIdUserId(int contentId, int userId) {
 		return favoriteMapper.selectFavoriteByContentIdUserId(contentId, userId);
+	}
+
+	public List<Favorite> getFavoriteListByUserId(int userId) {
+		return favoriteMapper.selectFavoriteListByUserId(userId);
 	}
 	
 	public void favoriteToggle(int userId, String mediaType, int tmdbId) {
 		
+		// contentId 조회(없으면 생성)
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
 		if (content == null) {
@@ -33,21 +38,26 @@ public class FavoriteBO {
 			contentId = content.getId();
 		}
 		
-		// DB SELECT
-		Favorite favorite = favoriteMapper.selectFavoriteByContentIdUserId(contentId, userId);
+		// 인생 컨텐츠 조회
+		List<Favorite> favoriteList = favoriteMapper.selectFavoriteListByUserId(userId);
 		
-		// favorite이 있으면 추가 없으면 삭제
-		if(favorite == null) {
-			// DB insert
+		// 인생 컨텐츠에 이미 있는 경우
+		for(Favorite favorite : favoriteList) {
+			if(favorite.getContentId() == contentId) {
+				favoriteMapper.deleteFavoriteByContentIdUserId(contentId, userId);
+				return;
+			} 
+		}
+		
+		// 인생 컨텐츠에 없는 경우 -> 3개 미만일 경우에만 추가
+		if(favoriteList.size() < 3) {
 			favoriteMapper.insertFavorite(contentId, userId);
-		} else {
-			// DB delete
-			favoriteMapper.deleteFavoriteByContentIdUserId(contentId, userId);
 		}
 	}
-	
-	public List<Favorite> getFavoriteListByUserId(int userId) {
-		return favoriteMapper.selectFavoriteListByUserId(userId);
+
+	public void deleteFavoriteByMediaTypeTmdbIdUserId(int userId, String mediaType, int tmdbId) {
+		int contentId = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId).getId();
+		favoriteMapper.deleteFavoriteByContentIdUserId(contentId, userId);
 	}
-	
+
 }

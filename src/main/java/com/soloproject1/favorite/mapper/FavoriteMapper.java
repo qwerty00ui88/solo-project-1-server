@@ -23,4 +23,5 @@ public interface FavoriteMapper  {
 			@Param("userId")int userId);
 	
 	public List<Favorite> selectFavoriteListByUserId(int userId);
+	
 }
