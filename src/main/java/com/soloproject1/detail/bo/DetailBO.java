@@ -53,6 +53,9 @@ public class DetailBO {
 
 			// 인생 컨텐츠 등록 여부
 			detailView.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
+		
+			// 내 코멘트
+			detailView.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
 		}
 		
 		// 코멘트

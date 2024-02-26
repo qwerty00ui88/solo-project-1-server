@@ -38,17 +38,7 @@ public class CommentRestController {
 		int userId = (int)session.getAttribute("userId");
 
 		// DB INSERT
-		CommentEntity addedComment = commentBO.addComment(userId, mediaType, tmdbId, text);
-		
-		// 응답값
-		Map<String, Object> result = new HashMap<>();
-		if (addedComment != null) {
-			result.put("code", 200);
-			result.put("result", "성공");
-		} else {
-			result.put("code", 500);
-			result.put("error_message", "댓글 추가에 실패하였습니다. 관리자에게 문의해주세요.");
-		}
+		Map<String, Object> result = commentBO.addComment(userId, mediaType, tmdbId, text);
 
 		return result;
 	}

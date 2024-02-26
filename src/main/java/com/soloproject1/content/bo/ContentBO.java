@@ -2,6 +2,8 @@ package com.soloproject1.content.bo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.soloproject1.content.dto.ContentDTO;
@@ -9,8 +11,6 @@ import com.soloproject1.content.dto.MovieDTO;
 import com.soloproject1.content.dto.TVDTO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.content.repository.ContentRepository;
-
-import reactor.core.publisher.Mono;
 
 @Service
 public class ContentBO {
@@ -36,14 +36,18 @@ public class ContentBO {
 	}
 
 	public ContentDTO getContentDetail(String mediaType, int tmdbId) {
+		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+		queryParams.add("language", "ko-KR");
 
 		if (mediaType.equals("movie")) {
-			ContentDTO contentDetail = (ContentDTO) webClient.get().uri(mediaType + "/" + String.valueOf(tmdbId))
+			ContentDTO contentDetail = (ContentDTO) webClient.get()
+					.uri(uriBuilder -> uriBuilder.path(mediaType + "/" + tmdbId).queryParams(queryParams).build())
 					.retrieve().bodyToMono(MovieDTO.class).block();
 			contentDetail.setMediaType(mediaType);
 			return contentDetail;
 		} else {
-			ContentDTO contentDetail = (ContentDTO) webClient.get().uri(mediaType + "/" + String.valueOf(tmdbId))
+			ContentDTO contentDetail = (ContentDTO) webClient.get()
+					.uri(uriBuilder -> uriBuilder.path(mediaType + "/" + tmdbId).queryParams(queryParams).build())
 					.retrieve().bodyToMono(TVDTO.class).block();
 			contentDetail.setMediaType(mediaType);
 			return contentDetail;

@@ -68,7 +68,7 @@ public class MyPageBO {
 	}
 
 	public List<MyComment> getCommentListByUserId(int userId) {
-		List<CommentEntity> commentList = commentBO.getcommentListByUserId(userId);
+		List<CommentEntity> commentList = commentBO.getcommentListByUserIdOrderByUpdatedAtDesc(userId);
 		List<MyComment> myCommentList = new ArrayList<>();
 		for (CommentEntity comment : commentList) {
 			MyComment myComment = new MyComment();

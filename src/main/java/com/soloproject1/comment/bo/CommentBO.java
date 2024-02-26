@@ -1,7 +1,9 @@
 package com.soloproject1.comment.bo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class CommentBO {
 	@Autowired
 	private UserBO userBO;
 	
-	public CommentEntity addComment(int userId, String mediaType, int tmdbId, String text) {
+	public Map<String, Object> addComment(int userId, String mediaType, int tmdbId, String text) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
@@ -34,9 +36,19 @@ public class CommentBO {
 		} else {
 			contentId = content.getId();
 		}
-
-		return commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
-	
+		
+		Map<String, Object> result = new HashMap<>();
+		CommentEntity comment = commentRepository.findByContentIdAndUserId(contentId, userId);
+		if(comment != null) {
+			result.put("code", 500);
+			result.put("error_message", "작성한 코멘트가 존재합니다.");
+			return result;
+		}
+		
+		commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+		result.put("code", 200);
+		result.put("result", "성공");
+		return result;
 	}
 
 	public CommentEntity updateCommentById(int commentId, String text) {
@@ -86,8 +98,12 @@ public class CommentBO {
 		return commentViewList;
 	}
 	
-	public List<CommentEntity> getcommentListByUserId(int userId) {
-		return commentRepository.findByUserId(userId);
+	public List<CommentEntity> getcommentListByUserIdOrderByUpdatedAtDesc(int userId) {
+		return commentRepository.findByUserIdOrderByUpdatedAtDesc(userId);
+	}
+	
+	public CommentEntity getCommentByContentIdUserId(int contentId, int userId) {
+		return commentRepository.findByContentIdAndUserId(contentId, userId);
 	}
 
 }
