@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.entity.CommentEntity;
-import com.soloproject1.content.bo.ContentBO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,9 +22,6 @@ public class CommentRestController {
 
 	@Autowired
 	private CommentBO commentBO;
-
-	@Autowired
-	private ContentBO contentBO;
 
 	@PostMapping("/create")
 	public Map<String, Object> createComment(
