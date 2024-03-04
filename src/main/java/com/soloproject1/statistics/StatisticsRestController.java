@@ -18,9 +18,9 @@ public class StatisticsRestController {
 	
 	@GetMapping("/by-region-gender-ageGroup")
 	public StatisticsView getStatisticsByRegionGenderAgeGroup(
-			@RequestParam("region") String region,
-			@RequestParam("gender") String gender,
-			@RequestParam("ageGroup") Integer ageGroup) {
+			@RequestParam(value="region", required=false) String region,
+			@RequestParam(value="gender", required=false) String gender,
+			@RequestParam(value="ageGroup", required=false) Integer ageGroup) {
 		
 		return statisticsBO.generateStatisticsViewByRegionGenderAgeGroup(region, gender, ageGroup);
 	}

@@ -68,9 +68,12 @@ public class ContentBO {
 		ContentStatistics contentStatistics = contentMapper.selectBestContentByRegionGenderBirth(region, gender,
 				startBirthYear, endBirthYear);
 		ContentDetailStatistics contentDetailStatistics = new ContentDetailStatistics();
-		contentDetailStatistics
-				.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
-		contentDetailStatistics.setCount(contentStatistics.getCount());
+
+		if (contentStatistics != null) {
+			contentDetailStatistics
+					.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
+			contentDetailStatistics.setCount(contentStatistics.getCount());
+		}
 
 		return contentDetailStatistics;
 	}
@@ -81,10 +84,11 @@ public class ContentBO {
 		ContentStatistics contentStatistics = contentMapper.selectWorstContentByRegionGenderBirth(region, gender,
 				startBirthYear, endBirthYear);
 		ContentDetailStatistics contentDetailStatistics = new ContentDetailStatistics();
-		contentDetailStatistics
-				.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
-		contentDetailStatistics.setCount(contentStatistics.getCount());
-
+		if (contentStatistics != null) {
+			contentDetailStatistics
+					.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
+			contentDetailStatistics.setCount(contentStatistics.getCount());
+		}
 		return contentDetailStatistics;
 	}
 
@@ -94,10 +98,11 @@ public class ContentBO {
 		ContentStatistics contentStatistics = contentMapper.selectMostSelectedFavoriteContentByRegionGenderBirth(region,
 				gender, startBirthYear, endBirthYear);
 		ContentDetailStatistics contentDetailStatistics = new ContentDetailStatistics();
-		contentDetailStatistics
-				.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
-		contentDetailStatistics.setCount(contentStatistics.getCount());
-
+		if (contentStatistics != null) {
+			contentDetailStatistics
+					.setContent(getContentDetail(contentStatistics.getMediaType(), contentStatistics.getTmdbId()));
+			contentDetailStatistics.setCount(contentStatistics.getCount());
+		}
 		return contentDetailStatistics;
 	}
 
