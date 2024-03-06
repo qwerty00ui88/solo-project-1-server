@@ -8,7 +8,7 @@
 			`name`
 			, `nickname`
 			, `email`
-			, `emailAuthentication`
+			, `emailVerified`
 			, `password`
 			, `birth`
 			, `gender`
@@ -22,7 +22,7 @@
 			#{name}
 			, #{nickname}
 			, #{email}
-			, #{emailAuthentication}
+			, false
 			, #{password}
 			, #{birth}
 			, #{gender}
@@ -32,4 +32,51 @@
 			, NOW()
 		)
 	</insert>
+	
+	<select id="selectUserByNicknamePassword" parameterType="map" resultType="com.soloproject1.user.domain.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `email`
+			, `emailVerified`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`nickname` = #{nickname}
+			AND `password` = #{password}
+	</select>
+	
+	<select id="selectUserByUserId" parameterType="int" resultType="com.soloproject1.user.domain.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `email`
+			, `emailVerified`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<update id="updateEmailVerifiedByUserId" parameterType="map">
+		UPDATE `user`
+		SET `emailVerified` = #{emailVerified}
+		WHERE `id` = #{userId}
+	</update>
 </mapper>

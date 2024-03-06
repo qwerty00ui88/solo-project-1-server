@@ -1,7 +1,9 @@
 package com.soloproject1.comment.bo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
+import com.soloproject1.user.bo.UserBO;
 
 @Service
 public class CommentBO {
@@ -21,7 +24,10 @@ public class CommentBO {
 	@Autowired
 	private ContentBO contentBO;
 
-	public CommentEntity addComment(int userId, String mediaType, int tmdbId, String text) {
+	@Autowired
+	private UserBO userBO;
+	
+	public Map<String, Object> addComment(int userId, String mediaType, int tmdbId, String text) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
@@ -30,11 +36,23 @@ public class CommentBO {
 		} else {
 			contentId = content.getId();
 		}
-
-		return commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+		
+		Map<String, Object> result = new HashMap<>();
+		CommentEntity comment = commentRepository.findByContentIdAndUserId(contentId, userId);
+		if(comment != null) {
+			result.put("code", 500);
+			result.put("error_message", "작성한 코멘트가 존재합니다.");
+			return result;
+		}
+		
+		commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+		result.put("code", 200);
+		result.put("result", "성공");
+		return result;
 	}
 
 	public CommentEntity updateCommentById(int commentId, String text) {
+		
 		CommentEntity comment = commentRepository.findById(commentId).orElse(null);
 
 		if (comment != null) {
@@ -46,6 +64,7 @@ public class CommentBO {
 	}
 
 	public void deleteCommentById(int commentId) {
+		
 		CommentEntity comment = commentRepository.findById(commentId).orElse(null);
 
 		if (comment != null) {
@@ -62,14 +81,29 @@ public class CommentBO {
 		for (CommentEntity comment : commentList) {
 			CommentView commentView = new CommentView();
 
-			// @@@ 회원 정보 삽입
-
-			// 댓글 삽입
+			int userId = comment.getUserId();
+			
+			// userId 세팅
+			commentView.setUserId(userId);
+			
+			// nickname 세팅
+			commentView.setNickname(userBO.getUserByUserId(userId).getNickname());
+			
+			// 코멘트 리스트 세팅
 			commentView.setComment(comment);
+			
 			commentViewList.add(commentView);
 		}
 
 		return commentViewList;
+	}
+	
+	public List<CommentEntity> getcommentListByUserIdOrderByUpdatedAtDesc(int userId) {
+		return commentRepository.findByUserIdOrderByUpdatedAtDesc(userId);
+	}
+	
+	public CommentEntity getCommentByContentIdUserId(int contentId, int userId) {
+		return commentRepository.findByContentIdAndUserId(contentId, userId);
 	}
 
 }

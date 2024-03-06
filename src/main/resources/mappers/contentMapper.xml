@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soloproject1.content.mapper.ContentMapper">
+	<select id="selectBestContentByRegionGenderBirth" parameterType="map" resultType="com.soloproject1.statistics.domain.ContentStatistics">
+		SELECT
+			content.mediaType
+			, content.tmdbId
+			, COUNT(*) AS count
+		FROM content
+			JOIN recommend ON content.id = recommend.contentId
+			JOIN user ON recommend.userId = user.id
+		WHERE status = 'good'
+			<if test="region != null">
+			AND user.region = #{region}
+			</if>
+			<if test="gender != null">
+			AND user.gender = #{gender}
+			</if>
+			<if test="startBirthYear != null">
+			AND user.birth BETWEEN #{startBirthYear} AND #{endBirthYear}
+			</if>
+		GROUP BY content.id
+		ORDER BY count DESC
+		LIMIT 1;
+	</select>
+	<select id="selectWorstContentByRegionGenderBirth" parameterType="map" resultType="com.soloproject1.statistics.domain.ContentStatistics">
+		SELECT
+			content.mediaType
+			, content.tmdbId
+			, COUNT(*) AS count
+		FROM content
+			JOIN recommend ON content.id = recommend.contentId
+			JOIN user ON recommend.userId = user.id
+		WHERE status = 'bad'
+			<if test="region != null">
+			AND user.region = #{region}
+			</if>
+			<if test="gender != null">
+			AND user.gender = #{gender}
+			</if>
+			<if test="startBirthYear != null">
+			AND user.birth BETWEEN #{startBirthYear} AND #{endBirthYear}
+			</if>
+		GROUP BY content.id
+		ORDER BY count DESC
+		LIMIT 1;
+	</select>
+	<select id="selectMostSelectedFavoriteContentByRegionGenderBirth" parameterType="map" resultType="com.soloproject1.statistics.domain.ContentStatistics">
+		SELECT
+			content.mediaType
+			, content.tmdbId
+			, COUNT(*) AS count
+		FROM content
+			JOIN favorite ON content.id = favorite.contentId
+			JOIN user ON favorite.userId = user.id
+		WHERE 1
+			<if test="region != null">
+			AND user.region = #{region}
+			</if>
+			<if test="gender != null">
+			AND user.gender = #{gender}
+			</if>
+			<if test="startBirthYear != null">
+			AND user.birth BETWEEN #{startBirthYear} AND #{endBirthYear}
+			</if>
+		GROUP BY content.id
+		ORDER BY count DESC
+		LIMIT 1;
+	</select>
+</mapper>

@@ -1,10 +1,10 @@
 package com.soloproject1.recommend.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.soloproject1.content.bo.ContentBO;
-import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.recommend.domain.Recommend;
 import com.soloproject1.recommend.mapper.RecommendMapper;
 
@@ -28,6 +28,10 @@ public class RecommendBO {
 
 	public int deleteRecommendByUserIdAndContentId(int userId, int contentId) {
 		return recommendMapper.deleteRecommendByUserIdAndContentId(userId, contentId);
+	}
+	
+	public List<Recommend> getRecommendListByUserId(int userId) {
+		return recommendMapper.selectRecommendListByUserId(userId);
 	}
 
 }

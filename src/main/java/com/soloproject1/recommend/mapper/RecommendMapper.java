@@ -1,5 +1,7 @@
 package com.soloproject1.recommend.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,4 +28,5 @@ public interface RecommendMapper {
 			@Param("userId") int userId, 
 			@Param("contentId") int contentId);
 	
+	public List<Recommend> selectRecommendListByUserId(int userId);
 }

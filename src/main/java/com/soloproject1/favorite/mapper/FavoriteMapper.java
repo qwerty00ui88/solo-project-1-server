@@ -1,5 +1,7 @@
 package com.soloproject1.favorite.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,5 +21,7 @@ public interface FavoriteMapper  {
 	public void deleteFavoriteByContentIdUserId(
 			@Param("contentId")int contentId, 
 			@Param("userId")int userId);
+	
+	public List<Favorite> selectFavoriteListByUserId(int userId);
 	
 }

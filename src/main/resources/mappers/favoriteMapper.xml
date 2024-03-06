@@ -36,4 +36,15 @@
 			`contentId` = #{contentId}
 			AND `userId` = #{userId}
 	</delete>
+	
+	<select id="selectFavoriteListByUserId" parameterType="int" resultType="com.soloproject1.favorite.domain.Favorite">
+		SELECT
+			`contentId`
+			, `userId`
+			, `createdAt`
+		FROM
+			`favorite`
+		WHERE
+			`userId` = #{userId}
+	</select>
 </mapper>
