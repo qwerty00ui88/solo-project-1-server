@@ -2,9 +2,10 @@ package com.soloproject1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class SoloProject1Application {
+public class SoloProject1Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SoloProject1Application.class, args);
