@@ -1,6 +1,7 @@
 package com.soloproject1.user.bo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.soloproject1.common.EncryptUtils;
@@ -17,6 +18,9 @@ public class UserBO {
 	@Autowired
 	private EmailVerificationBO emailVerificationBO;
 	
+	@Value("${emailVerification.baseUrl}")
+	private String emailVerificationBaseUrl;
+	
 	public Integer addUser(User user) {
 		// 비밀번호 해싱
 		String hashedPassword = EncryptUtils.sha256(user.getPassword());
@@ -32,7 +36,7 @@ public class UserBO {
 			String token = emailVerificationBO.addToken(insertedUser.getId(), "회원가입");
 			
 			String subject = "인증 메일입니다.";
-			String text = "http://localhost/user/verify-email?userId=" + userId + "&token=" + token;
+			String text = emailVerificationBaseUrl + "/user/verify-email?userId=" + userId + "&token=" + token;
 			emailVerificationBO.sendEmail(insertedUser.getEmail(), subject, text);
 		}
 		return userId;
