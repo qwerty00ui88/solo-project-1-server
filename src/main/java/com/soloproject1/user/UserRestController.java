@@ -85,6 +85,17 @@ public class UserRestController {
 		return result;
 	}
 
+	@GetMapping("/isDuplicated")
+	public Map<String, Object> isDuplicated(@RequestParam("nickname") String nickname) {
+		Boolean isDuplicated =  userBO.getUserByNickname(nickname) != null;
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("result", isDuplicated);
+	
+		return result;
+	}
+
 	@GetMapping("/verify-email")
 	public Map<String, Object> verifyEmail(@RequestParam("userId") int userId, @RequestParam("token") String token) {
 
@@ -105,17 +116,17 @@ public class UserRestController {
 	public Map<String, Object> resendVerificationEmail(@RequestBody Map<String, Object> request) {
 		Integer userId = (Integer) request.get("userId");
 		String purpose = (String) request.get("purpose");
-		
+
 		User user = userBO.getUserByUserId(userId);
 
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) {
 			String token = emailVerificationBO.addToken(userId, purpose);
-			
+
 			String subject = "인증 메일입니다.";
 			String text = "http://localhost/user/verify-email?userId=" + userId + "&token=" + token;
 			emailVerificationBO.sendEmail(user.getEmail(), subject, text);
-			
+
 			result.put("code", 200);
 			result.put("result", "성공");
 		} else {

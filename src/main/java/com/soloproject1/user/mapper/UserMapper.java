@@ -16,6 +16,8 @@ public interface UserMapper {
 	
 	public User selectUserByUserId(int id);
 	
+	public User selectUserByNickname(String nickname);
+	
 	public void updateEmailVerifiedByUserId(
 			@Param("userId") int userId, 
 			@Param("emailVerified") boolean emailVerified);
