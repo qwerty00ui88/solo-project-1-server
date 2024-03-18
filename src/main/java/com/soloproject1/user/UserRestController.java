@@ -59,9 +59,8 @@ public class UserRestController {
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
 
-			Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
-			sessionCookie.setPath("/");
-			response.addCookie(sessionCookie);
+			String cookieString = "JSESSIONID=" + session.getId() + "; path=/; SameSite=None; Secure;";
+			response.addHeader("Set-Cookie", cookieString);
 
 			result.put("code", 200);
 			result.put("result", "성공");
