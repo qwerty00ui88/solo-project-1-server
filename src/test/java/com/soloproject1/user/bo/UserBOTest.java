@@ -16,19 +16,25 @@ class UserBOTest {
 	@Autowired
 	UserBO userBO;
 	
+//	@Test
+//	void 회원가입테스트() {
+//		
+//		User user = new User();
+//		user.setName("홍길동");
+//		user.setNickname("홍홍");
+//		user.setEmail("yirecav730@laymro.com");
+//		user.setPassword("1234");
+//		user.setBirth(1887);
+//		user.setGender("male");
+//		
+//		userBO.addUser(user);
+//	}
+	
 	@Test
-	void 회원가입테스트() {
-		
-		User user = new User();
-		user.setName("홍길동");
-		user.setNickname("홍홍");
-		user.setEmail("yirecav730@laymro.com");
-		user.setPassword("1234");
-		user.setBirth(1887);
-		user.setGender("male");
-		
-		userBO.addUser(user);
+	void 닉네임중복테스트() {
+		userBO.getUserByNickname("a");
 	}
+	
 	
 //	@Transactional
 //	@Test

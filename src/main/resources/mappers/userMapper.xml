@@ -74,6 +74,26 @@
 			`id` = #{id}
 	</select>
 	
+	<select id="selectUserByNickname" parameterType="string" resultType="com.soloproject1.user.domain.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `email`
+			, `emailVerified`
+			, `password`
+			, `birth`
+			, `gender`
+			, `region`
+			, `profileImagePath`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`nickname` = #{nickname}
+	</select>
+	
 	<update id="updateEmailVerifiedByUserId" parameterType="map">
 		UPDATE `user`
 		SET `emailVerified` = #{emailVerified}
