@@ -50,6 +50,10 @@ public class UserBO {
 		return userMapper.selectUserByUserId(id);
 	}
 	
+	public User getUserByNickname(String nickname) {
+		return userMapper.selectUserByNickname(nickname);
+	}
+	
 	public boolean verifyEmail(int userId, String token) {
 		boolean isVerified = emailVerificationBO.verifyEmail(userId, token);
 		if(isVerified) {
