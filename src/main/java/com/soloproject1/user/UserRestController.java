@@ -59,7 +59,7 @@ public class UserRestController {
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
 
-			String cookieString = "JSESSIONID=" + session.getId() + "; path=/; SameSite=None; Secure;";
+			String cookieString = "JSESSIONID=" + session.getId() + "; path=/; domain=.goodorbad.site; SameSite=None; Secure;";
 			response.addHeader("Set-Cookie", cookieString);
 
 			result.put("code", 200);
