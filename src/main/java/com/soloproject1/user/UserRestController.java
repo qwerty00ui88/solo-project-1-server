@@ -16,7 +16,6 @@ import com.soloproject1.emailVerification.bo.EmailVerificationBO;
 import com.soloproject1.user.bo.UserBO;
 import com.soloproject1.user.domain.User;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -58,9 +57,7 @@ public class UserRestController {
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
-			
-			String cookieString = "isLogin=true; path=/; domain=.goodorbad.site; SameSite=None; Secure;";
-			response.addHeader("Set-Cookie", cookieString);
+			session.setAttribute("userNickname", user.getNickname());
 
 			result.put("code", 200);
 			result.put("result", "성공");
@@ -76,10 +73,22 @@ public class UserRestController {
 	@GetMapping("/logout")
 	public Map<String, Object> logout(HttpSession session) {
 		session.removeAttribute("userId");
+		session.removeAttribute("userNickname");
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
 		result.put("result", "성공");
+
+		return result;
+	}
+	
+	@GetMapping("/checkLoginStatus")
+	public Map<String, Object> checkLoginStatus(HttpSession session) {
+		Integer userId = (Integer) session.getAttribute("userId");
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("result", userId != null);
 
 		return result;
 	}
