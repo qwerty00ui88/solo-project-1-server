@@ -1,6 +1,7 @@
 package com.soloproject1.content.dto;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,6 +20,13 @@ public class MovieDTO extends ContentDTO {
 	private String originalTitle;
 
 	@JsonProperty("release_date")
-	private Date releaseDate;
-	
+	private String releaseDate;
+
+	public MovieDTO(Map<String, Object> result) {
+		super(result);
+		this.setTitle((String)result.get("title"));
+		this.setOriginalTitle((String)result.get("original_title"));
+		this.setReleaseDate((String)result.get("release_date"));
+	}
+
 }
