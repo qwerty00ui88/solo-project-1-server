@@ -1,7 +1,9 @@
 package com.soloproject1.content.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,18 +119,44 @@ public class ContentBO {
 		return contentDetailStatistics;
 	}
 
-	public List<ContentDTO> getAllTrendingList() {
+	public List<ContentDTO> getTrendingList(String category, String duration) {
 		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 		queryParams.add("language", "ko-KR");
 
-		return tmdbWebClient.get()
-				.uri(uriBuilder -> uriBuilder.path("/trending/all/day").queryParams(queryParams).build()).retrieve()
-				.bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
+		return tmdbWebClient
+				.get().uri(uriBuilder -> uriBuilder.path("/trending/" + category + "/" + duration)
+						.queryParams(queryParams).build())
+				.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
 					List<Map<String, Object>> results = responseBody.getResults();
 					List<ContentDTO> allTrending = results.stream().map(ContentDTO::createDTO)
 							.collect(Collectors.toList());
 					return Mono.just(allTrending);
 				}).block();
+	}
+
+	public List<String> getAllTrendingVideoList(List<ContentDTO> allTrendingList) {
+		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+		queryParams.add("language", "ko-KR");
+
+		Random random = new Random();
+		List<String> videoKey = new ArrayList<>();
+		for (ContentDTO content : allTrendingList) {
+			tmdbWebClient.get()
+					.uri(uriBuilder -> uriBuilder
+							.path("/" + content.getMediaType() + "/" + content.getTmdbId() + "/videos")
+							.queryParams(queryParams).build())
+					.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
+						// 한 컨텐츠에 대한 비디오 리스트
+						List<Map<String, Object>> videoList = responseBody.getResults();
+						// 하나만 추출하여 리스트에 저장
+						if (videoList.size() > 0) {
+							int randNum = random.nextInt(videoList.size());
+							videoKey.add((String) videoList.get(randNum).get("key"));
+						}
+						return Mono.empty();
+					}).block();
+		}
+		return videoKey.subList(0, 7);
 	}
 
 }

@@ -12,7 +12,7 @@ import lombok.ToString;
 public class MainPageView {
 
 	private List<ContentDTO> allTrending;
-	private List<ContentDTO> movieTreding;
+	private List<ContentDTO> movieTrending;
 	private List<String> allTrendingVideo;
 	
 }

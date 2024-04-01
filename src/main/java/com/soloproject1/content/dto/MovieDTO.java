@@ -24,9 +24,9 @@ public class MovieDTO extends ContentDTO {
 
 	public MovieDTO(Map<String, Object> result) {
 		super(result);
-		this.setTitle((String)result.get("title"));
-		this.setOriginalTitle((String)result.get("original_title"));
-		this.setReleaseDate((String)result.get("release_date"));
+		this.setTitle((String) result.get("title"));
+		this.setOriginalTitle((String) result.get("original_title"));
+		this.setReleaseDate((String) result.get("release_date"));
 	}
 
 }

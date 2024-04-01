@@ -23,6 +23,7 @@ public class PersonDTO {
 	
 	private Double popularity;
 	
-	private String profile_path;
+	@JsonProperty("profile_path")
+	private String profilePath;
 	
 }
