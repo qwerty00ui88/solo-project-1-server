@@ -1,4 +1,4 @@
-package com.soloproject1.detail.bo;
+package com.soloproject1.detailpage.bo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +10,13 @@ import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.domain.CommentView;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
-import com.soloproject1.detail.domain.DetailView;
+import com.soloproject1.detailpage.domain.DetailPage;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
 
-import jakarta.servlet.http.HttpSession;
-
 @Service
-public class DetailBO {
+public class DetailPageBO {
 
 	@Autowired
 	private ContentBO contentBO;
@@ -32,7 +30,7 @@ public class DetailBO {
 	@Autowired
 	private CommentBO commentBO;
 
-	public DetailView generateDetailViewList(Integer userId, String mediaType, int tmdbId) {
+	public DetailPage generateDetailViewList(Integer userId, String mediaType, int tmdbId) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
@@ -42,7 +40,7 @@ public class DetailBO {
 			contentId = content.getId();
 		}
 
-		DetailView detailView = new DetailView();
+		DetailPage detailView = new DetailPage();
 
 		if (userId != null) {
 			// 추천 상태

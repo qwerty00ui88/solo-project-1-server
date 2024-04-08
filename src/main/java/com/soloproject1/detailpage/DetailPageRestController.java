@@ -1,24 +1,23 @@
-package com.soloproject1.detail;
+package com.soloproject1.detailpage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soloproject1.detail.bo.DetailBO;
-import com.soloproject1.detail.domain.DetailView;
+import com.soloproject1.detailpage.bo.DetailPageBO;
+import com.soloproject1.detailpage.domain.DetailPage;
 
 import jakarta.servlet.http.HttpSession;
 
-
 @RestController
-public class DetailRestController {
+public class DetailPageRestController {
 	
 	@Autowired
-	private DetailBO detailBO;
+	private DetailPageBO detailBO;
 	
-	@RequestMapping("/detail")
-	public DetailView detailView(
+	@GetMapping("/detail")
+	public DetailPage detailView(
 			@RequestParam("mediaType") String mediaType,
 			@RequestParam("tmdbId") int tmdbId,
 			HttpSession session) {

@@ -1,4 +1,4 @@
-package com.soloproject1.detail.domain;
+package com.soloproject1.detailpage.domain;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import lombok.ToString;
 
 @ToString
 @Data
-public class DetailView {
+public class DetailPage {
 	
 	private String recommendStatus;
 	private boolean isFavorite;

@@ -1,4 +1,4 @@
-package com.soloproject1.person.dto;
+package com.soloproject1.tmdb.person;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
