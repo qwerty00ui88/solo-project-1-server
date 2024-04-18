@@ -50,10 +50,8 @@ public class UserRestController {
 		String nickname = (String) request.get("nickname");
 		String hashedPassword = EncryptUtils.sha256((String) request.get("password"));
 
-		// db select
 		User user = userBO.getUserByNicknamePassword(nickname, hashedPassword);
 
-		// 응답값
 		Map<String, Object> result = new HashMap<>();
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
