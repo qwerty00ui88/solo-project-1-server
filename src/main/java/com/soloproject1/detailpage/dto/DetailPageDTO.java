@@ -1,16 +1,19 @@
-package com.soloproject1.detailpage.domain;
+package com.soloproject1.detailpage.dto;
 
 import java.util.List;
 
 import com.soloproject1.comment.domain.CommentView;
 import com.soloproject1.comment.entity.CommentEntity;
+import com.soloproject1.tmdb.content.ContentDetailDTO;
 
 import lombok.Data;
 import lombok.ToString;
 
 @ToString
 @Data
-public class DetailPage {
+public class DetailPageDTO {
+	
+	private ContentDetailDTO contentDetailDTO;
 	
 	private String recommendStatus;
 	private boolean isFavorite;

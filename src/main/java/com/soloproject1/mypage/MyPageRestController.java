@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soloproject1.content.dto.ContentDTO;
 import com.soloproject1.mypage.bo.MyPageBO;
 import com.soloproject1.mypage.domain.MyComment;
 import com.soloproject1.mypage.domain.MyRecommend;
+import com.soloproject1.tmdb.content.ContentDTO;
 
 import jakarta.servlet.http.HttpSession;
 

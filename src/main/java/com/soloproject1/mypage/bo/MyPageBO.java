@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.content.bo.ContentBO;
-import com.soloproject1.content.dto.ContentDTO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.favorite.domain.Favorite;
@@ -17,8 +16,7 @@ import com.soloproject1.mypage.domain.MyComment;
 import com.soloproject1.mypage.domain.MyRecommend;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
-
-import reactor.core.publisher.Mono;
+import com.soloproject1.tmdb.content.ContentDTO;
 
 @Service
 public class MyPageBO {

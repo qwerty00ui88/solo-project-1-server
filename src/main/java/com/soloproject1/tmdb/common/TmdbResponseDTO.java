@@ -1,4 +1,4 @@
-package com.soloproject1.content.dto;
+package com.soloproject1.tmdb.common;
 
 import java.util.List;
 import java.util.Map;
@@ -11,8 +11,7 @@ import lombok.ToString;
 @ToString
 @Data
 public class TmdbResponseDTO {
-	
-	private int page;
+private int page;
 	
 	private List<Map<String, Object>> results;
 	

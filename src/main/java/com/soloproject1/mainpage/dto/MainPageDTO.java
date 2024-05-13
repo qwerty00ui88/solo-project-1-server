@@ -1,15 +1,15 @@
-package com.soloproject1.mainpage.domain;
+package com.soloproject1.mainpage.dto;
 
 import java.util.List;
 
-import com.soloproject1.content.dto.ContentDTO;
+import com.soloproject1.tmdb.content.ContentDTO;
 
 import lombok.Data;
 import lombok.ToString;
 
 @ToString
 @Data
-public class MainPageView {
+public class MainPageDTO {
 
 	private List<ContentDTO> allTrending;
 	private List<ContentDTO> movieTrending;

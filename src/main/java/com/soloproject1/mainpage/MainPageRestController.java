@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soloproject1.content.bo.ContentBO;
-import com.soloproject1.content.dto.ContentDTO;
 import com.soloproject1.mainpage.bo.MainPageBO;
-import com.soloproject1.mainpage.domain.MainPageView;
+import com.soloproject1.mainpage.dto.MainPageDTO;
+import com.soloproject1.tmdb.content.ContentDTO;
 
 @RequestMapping("/mainpage")
 @RestController
@@ -24,7 +24,7 @@ public class MainPageRestController {
 	private ContentBO contentBO;
 	
 	@GetMapping("/")
-	public MainPageView mainPageView() {
+	public MainPageDTO mainPageView() {
 		return mainPageBO.generateMainPageView();
 	}
 	

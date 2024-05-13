@@ -1,7 +1,7 @@
 package com.soloproject1.mypage.domain;
 
-import com.soloproject1.content.dto.ContentDTO;
 import com.soloproject1.recommend.domain.Recommend;
+import com.soloproject1.tmdb.content.ContentDTO;
 
 import lombok.Data;
 import lombok.ToString;
