@@ -12,6 +12,8 @@ import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
+import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.content.ContentDetailDTO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +25,9 @@ public class RecommendRestController {
 
 	@Autowired
 	private ContentBO contentBO;
+	
+	@Autowired
+	private TmdbBO tmdbBO;
 
 	@GetMapping("/recommend")
 	public Map<String, Object> recommend(
@@ -35,8 +40,9 @@ public class RecommendRestController {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		ContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
-			contentId = contentBO.addContent(mediaType, tmdbId);
+			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}

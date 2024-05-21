@@ -9,6 +9,8 @@ import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.favorite.domain.Favorite;
 import com.soloproject1.favorite.mapper.FavoriteMapper;
+import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.content.ContentDetailDTO;
 
 @Service
 public class FavoriteBO {
@@ -19,6 +21,9 @@ public class FavoriteBO {
 	@Autowired
 	private ContentBO contentBO;
 
+	@Autowired
+	private TmdbBO tmdbBO;
+	
 	public Favorite getFavoriteByContentIdUserId(int contentId, int userId) {
 		return favoriteMapper.selectFavoriteByContentIdUserId(contentId, userId);
 	}
@@ -32,8 +37,9 @@ public class FavoriteBO {
 		// contentId 조회(없으면 생성)
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		ContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
-			contentId = contentBO.addContent(mediaType, tmdbId);
+			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}

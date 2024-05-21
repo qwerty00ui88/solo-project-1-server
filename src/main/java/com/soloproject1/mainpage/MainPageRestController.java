@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.mainpage.bo.MainPageBO;
 import com.soloproject1.mainpage.dto.MainPageDTO;
+import com.soloproject1.tmdb.bo.TmdbBO;
 import com.soloproject1.tmdb.content.ContentDTO;
 
 @RequestMapping("/mainpage")
@@ -21,7 +21,7 @@ public class MainPageRestController {
 	private MainPageBO mainPageBO;
 
 	@Autowired
-	private ContentBO contentBO;
+	private TmdbBO tmdbBO;
 	
 	@GetMapping("/")
 	public MainPageDTO mainPageView() {
@@ -31,7 +31,7 @@ public class MainPageRestController {
 	@GetMapping("/trending")
 	public List<ContentDTO> getTrending(@RequestParam("category") String category,
 			@RequestParam("duration") String duration) {
-		return contentBO.getTrendingList(category, duration);
+			return tmdbBO.getTrendingList(category, duration);
 	}
 
 }

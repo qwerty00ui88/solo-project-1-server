@@ -13,7 +13,7 @@ import lombok.ToString;
 @Data
 public class DetailPageDTO {
 	
-	private ContentDetailDTO contentDetailDTO;
+	private ContentDetailDTO contentDetail;
 	
 	private String recommendStatus;
 	private boolean isFavorite;

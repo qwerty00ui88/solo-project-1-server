@@ -14,6 +14,7 @@ import com.soloproject1.detailpage.dto.DetailPageDTO;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
+import com.soloproject1.tmdb.bo.TmdbBO;
 import com.soloproject1.tmdb.content.ContentDetailDTO;
 
 @Service
@@ -30,30 +31,34 @@ public class DetailPageBO {
 
 	@Autowired
 	private CommentBO commentBO;
+	
+	@Autowired
+	private TmdbBO tmdbBO;
 
 	public DetailPageDTO generateDetailPageDTO(Integer userId, String mediaType, int tmdbId) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		ContentDetailDTO contentDetail = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
-			contentId = contentBO.addContent(mediaType, tmdbId);
+			contentId = contentBO.addContent(mediaType, tmdbId, contentDetail.getTitle(), contentDetail.getOriginalTitle(), contentDetail.getPosterPath(), contentDetail.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}
 
-		DetailPageDTO detailPageDTO = new DetailPageDTO();
+		DetailPageDTO detailPage = new DetailPageDTO();
 
 		// 컨텐츠 상세 정보
-		detailPageDTO.setContentDetailDTO(contentBO.getContentDetail(mediaType, tmdbId));
+		detailPage.setContentDetail(contentDetail);
 		
 		// 사용자의 추천, 인생 컨텐츠, 코멘트 작성 상태
 		if (userId != null) {
 			Recommend recommend = recommendBO.getRecommendByUserIdAndContentId(userId, contentId);
 			if (recommend != null) {
-				detailPageDTO.setRecommendStatus(recommend.getStatus());
+				detailPage.setRecommendStatus(recommend.getStatus());
 			}
-			detailPageDTO.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
-			detailPageDTO.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
+			detailPage.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
+			detailPage.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
 		}
 		
 		// 전체 코멘트
@@ -74,11 +79,11 @@ public class DetailPageBO {
 			}
 		}
 
-		detailPageDTO.setGoodCommentViewList(goodCommentViewList);
-		detailPageDTO.setBadCommentViewList(badCommentViewList);
-		detailPageDTO.setUnratedCommentViewList(unratedCommentViewList);
+		detailPage.setGoodCommentViewList(goodCommentViewList);
+		detailPage.setBadCommentViewList(badCommentViewList);
+		detailPage.setUnratedCommentViewList(unratedCommentViewList);
 
-		return detailPageDTO;
+		return detailPage;
 	};
 
 }

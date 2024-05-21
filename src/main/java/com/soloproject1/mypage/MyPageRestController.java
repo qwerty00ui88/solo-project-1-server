@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.soloproject1.mypage.bo.MyPageBO;
-import com.soloproject1.mypage.domain.MyComment;
-import com.soloproject1.mypage.domain.MyRecommend;
+import com.soloproject1.mypage.dto.MyComment;
+import com.soloproject1.mypage.dto.MyRecommendDTO;
 import com.soloproject1.tmdb.content.ContentDTO;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,7 +28,7 @@ public class MyPageRestController {
 	}
 	
 	@GetMapping("/recommend-list")
-	public List<MyRecommend> recommendList(HttpSession session) {
+	public List<MyRecommendDTO> recommendList(HttpSession session) {
 		int userId = (int) session.getAttribute("userId");
 		return myPageBO.getRecommendListByUserId(userId);
 	}
