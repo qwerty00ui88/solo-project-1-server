@@ -6,12 +6,16 @@ import org.springframework.stereotype.Service;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.content.repository.ContentRepository;
 import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
 @Service
 public class ContentBO {
 
 	@Autowired
 	private ContentRepository contentRepository;
+	
+	@Autowired
+	private TmdbBO tmdbBO;
 	
 	public int addContent(String mediaType, int tmdbId, String title, String originalTitle, String posterPath,
 			String backdropPath) {
@@ -26,6 +30,10 @@ public class ContentBO {
 
 	public ContentEntity getContentById(int id) {
 		return contentRepository.findById(id).orElse(null);
+	}
+	
+	public TmdbContentDetailDTO getContentDetailById(String mediaType, int tmdbId) {
+		return tmdbBO.getContentDetail(mediaType, tmdbId);
 	}
 
 

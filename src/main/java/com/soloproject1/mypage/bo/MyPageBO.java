@@ -17,7 +17,7 @@ import com.soloproject1.mypage.dto.MyRecommendDTO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
 import com.soloproject1.tmdb.bo.TmdbBO;
-import com.soloproject1.tmdb.content.ContentDTO;
+import com.soloproject1.tmdb.dto.TmdbContentDTO;
 
 @Service
 public class MyPageBO {
@@ -37,16 +37,16 @@ public class MyPageBO {
 	@Autowired
 	private TmdbBO tmdbBO;
 
-	public List<ContentDTO> getFavoriteListByUserId(int userId) {
+	public List<TmdbContentDTO> getFavoriteListByUserId(int userId) {
 
 		// userId로 favoirte 리스트 가져오기
 		List<Favorite> favoriteList = favoriteBO.getFavoriteListByUserId(userId);
 
 		// 리스트를 순회하며 api 호출
-		List<ContentDTO> contentDetailList = new ArrayList<>();
+		List<TmdbContentDTO> contentDetailList = new ArrayList<>();
 		for (Favorite favorite : favoriteList) {
 			ContentEntity content = contentBO.getContentById(favorite.getContentId());
-			ContentDTO contentDetail = tmdbBO.getContentDetail(content.getMediaType(), content.getTmdbId());
+			TmdbContentDTO contentDetail = tmdbBO.getContentDetail(content.getMediaType(), content.getTmdbId());
 			contentDetailList.add(contentDetail);
 		}
 		return contentDetailList;

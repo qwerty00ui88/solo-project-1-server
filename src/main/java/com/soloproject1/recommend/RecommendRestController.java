@@ -13,7 +13,7 @@ import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
 import com.soloproject1.tmdb.bo.TmdbBO;
-import com.soloproject1.tmdb.content.ContentDetailDTO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -40,7 +40,7 @@ public class RecommendRestController {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
-		ContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
 			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {

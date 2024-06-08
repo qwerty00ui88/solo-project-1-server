@@ -1,4 +1,4 @@
-package com.soloproject1.detailpage.bo;
+package com.soloproject1.detail.bo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +10,15 @@ import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.domain.CommentView;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
-import com.soloproject1.detailpage.dto.DetailPageDTO;
+import com.soloproject1.detail.dto.DetailDTO;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
 import com.soloproject1.tmdb.bo.TmdbBO;
-import com.soloproject1.tmdb.content.ContentDetailDTO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
 @Service
-public class DetailPageBO {
+public class DetailBO {
 
 	@Autowired
 	private ContentBO contentBO;
@@ -35,30 +35,30 @@ public class DetailPageBO {
 	@Autowired
 	private TmdbBO tmdbBO;
 
-	public DetailPageDTO generateDetailPageDTO(Integer userId, String mediaType, int tmdbId) {
+	public DetailDTO generateDetailPageDTO(Integer userId, String mediaType, int tmdbId) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
-		ContentDetailDTO contentDetail = tmdbBO.getContentDetail(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetail = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
 			contentId = contentBO.addContent(mediaType, tmdbId, contentDetail.getTitle(), contentDetail.getOriginalTitle(), contentDetail.getPosterPath(), contentDetail.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}
 
-		DetailPageDTO detailPage = new DetailPageDTO();
+		DetailDTO detail = new DetailDTO();
 
 		// 컨텐츠 상세 정보
-		detailPage.setContentDetail(contentDetail);
+		detail.setContentDetail(contentDetail);
 		
 		// 사용자의 추천, 인생 컨텐츠, 코멘트 작성 상태
 		if (userId != null) {
 			Recommend recommend = recommendBO.getRecommendByUserIdAndContentId(userId, contentId);
 			if (recommend != null) {
-				detailPage.setRecommendStatus(recommend.getStatus());
+				detail.setRecommendStatus(recommend.getStatus());
 			}
-			detailPage.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
-			detailPage.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
+			detail.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
+			detail.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
 		}
 		
 		// 전체 코멘트
@@ -79,11 +79,11 @@ public class DetailPageBO {
 			}
 		}
 
-		detailPage.setGoodCommentViewList(goodCommentViewList);
-		detailPage.setBadCommentViewList(badCommentViewList);
-		detailPage.setUnratedCommentViewList(unratedCommentViewList);
+		detail.setGoodCommentViewList(goodCommentViewList);
+		detail.setBadCommentViewList(badCommentViewList);
+		detail.setUnratedCommentViewList(unratedCommentViewList);
 
-		return detailPage;
+		return detail;
 	};
 
 }

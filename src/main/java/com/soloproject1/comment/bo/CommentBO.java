@@ -14,7 +14,7 @@ import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.tmdb.bo.TmdbBO;
-import com.soloproject1.tmdb.content.ContentDetailDTO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 import com.soloproject1.user.bo.UserBO;
 
 @Service
@@ -36,7 +36,7 @@ public class CommentBO {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
-		ContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
 			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {

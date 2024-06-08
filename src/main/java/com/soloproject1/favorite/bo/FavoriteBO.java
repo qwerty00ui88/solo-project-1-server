@@ -10,7 +10,7 @@ import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.favorite.domain.Favorite;
 import com.soloproject1.favorite.mapper.FavoriteMapper;
 import com.soloproject1.tmdb.bo.TmdbBO;
-import com.soloproject1.tmdb.content.ContentDetailDTO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
 @Service
 public class FavoriteBO {
@@ -37,7 +37,7 @@ public class FavoriteBO {
 		// contentId 조회(없으면 생성)
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
-		ContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
 			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {

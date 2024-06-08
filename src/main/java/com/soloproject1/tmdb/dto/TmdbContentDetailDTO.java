@@ -1,4 +1,4 @@
-package com.soloproject1.tmdb.content;
+package com.soloproject1.tmdb.dto;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,9 +11,7 @@ import lombok.ToString;
 @ToString
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class ContentDetailDTO extends ContentDTO {
-	private Double popularity;
-
+public class TmdbContentDetailDTO extends TmdbContentDTO {
 	private Double voteAverage;
 
 	private Integer voteCount;
@@ -30,9 +28,8 @@ public class ContentDetailDTO extends ContentDTO {
 	
 	private LinkedHashMap credits;
 	
-	public ContentDetailDTO(Map<String, Object> result) {
+	public TmdbContentDetailDTO(Map<String, Object> result) {
 		super(result);
-		this.setPopularity((Double) result.get("popularity"));
 		this.setVoteAverage((Double) result.get("vote_average"));
 		this.setVoteCount((Integer) result.get("vote_count"));
 		this.setOverview((String) result.get("overview"));
@@ -49,9 +46,8 @@ public class ContentDetailDTO extends ContentDTO {
 		}
 	}
 	
-	public ContentDetailDTO(Map<String, Object> result, String mediaType) {
+	public TmdbContentDetailDTO(Map<String, Object> result, String mediaType) {
 		super(result, mediaType);
-		this.setPopularity((Double) result.get("popularity"));
 		this.setVoteAverage((Double) result.get("vote_average"));
 		this.setVoteCount((Integer) result.get("vote_count"));
 		this.setOverview((String) result.get("overview"));
