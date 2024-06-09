@@ -17,102 +17,100 @@ import com.soloproject1.tmdb.common.TmdbResponseDTO;
 import com.soloproject1.tmdb.dto.TmdbContentDTO;
 import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
-import reactor.core.publisher.Mono;
-
 @Service
 public class TmdbBO {
-	private WebClient tmdbWebClient;
+    private WebClient tmdbWebClient;
 
-	public TmdbBO(@Qualifier("tmdbWebClient") WebClient tmdbWebClient) {
-		this.tmdbWebClient = tmdbWebClient;
-	}
-	
-	public TmdbContentDetailDTO getContentDetail(String mediaType, int tmdbId) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("language", "ko-KR");
-		queryParams.add("append_to_response", "credits");
+    public TmdbBO(@Qualifier("tmdbWebClient") WebClient tmdbWebClient) {
+        this.tmdbWebClient = tmdbWebClient;
+    }
+    
+    private <T> T getTmdbResponse(String path, Class<T> responseType) {
+    	MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("language", "ko-KR");
+        
+    	return tmdbWebClient.get()
+                .uri(uriBuilder -> uriBuilder.path(path)
+                        .queryParams(queryParams)
+                        .build())
+                .retrieve()
+                .bodyToMono(responseType)
+                .block();
+    }
 
-		Map<String, Object> result = tmdbWebClient.get()
-				.uri(uriBuilder -> uriBuilder.path("/" + mediaType + "/" + tmdbId).queryParams(queryParams).build())
-				.retrieve().bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
-				}).block();
+    private <T> T getTmdbResponse(String path, MultiValueMap<String, String> queryParams, Class<T> responseType) {
+    	queryParams.add("language", "ko-KR");
+    	return tmdbWebClient.get()
+                .uri(uriBuilder -> uriBuilder.path(path)
+                        .queryParams(queryParams)
+                        .build())
+                .retrieve()
+                .bodyToMono(responseType)
+                .block();
+    }
+    
+    private <T> T getTmdbResponse(String path, MultiValueMap<String, String> queryParams, ParameterizedTypeReference<T> responseType) {
+    	queryParams.add("language", "ko-KR");
+    	return tmdbWebClient.get()
+                .uri(uriBuilder -> uriBuilder.path(path)
+                        .queryParams(queryParams)
+                        .build())
+                .retrieve()
+                .bodyToMono(responseType)
+                .block();
+    }
 
-		TmdbContentDetailDTO contentDetailDTO = new TmdbContentDetailDTO(result, mediaType);
-		return contentDetailDTO;
-	}
-	
-	public List<TmdbContentDTO> getTrendingItemList(String category, String period) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("language", "ko-KR");
+    public TmdbContentDetailDTO getContentDetail(String mediaType, int tmdbId) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("append_to_response", "credits");
+        
+        Map<String, Object> result = getTmdbResponse("/" + mediaType + "/" + tmdbId, queryParams, new ParameterizedTypeReference<>() {});
+        return new TmdbContentDetailDTO(result, mediaType);
+    }
 
-		return tmdbWebClient
-				.get().uri(uriBuilder -> uriBuilder.path("/trending/" + category + "/" + period)
-						.queryParams(queryParams).build())
-				.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
-					List<Map<String, Object>> results = responseBody.getResults();
-					List<TmdbContentDTO> tmdbContentDTOList = results.stream().map(result -> new TmdbContentDTO(result, category))
-							.collect(Collectors.toList());
-					return Mono.just(tmdbContentDTOList);
-				}).block();
-	}
-	
-	public List<TmdbContentDTO> getSearchMovieListByQuery(String query, int page) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("language", "ko-KR");
-		queryParams.add("query", query);
-		queryParams.add("page", String.valueOf(page));
+    public List<TmdbContentDTO> getTrendingItemList(String category, String period) {
+        TmdbResponseDTO responseBody = getTmdbResponse("/trending/" + category + "/" + period, TmdbResponseDTO.class);
+        List<Map<String, Object>> results = responseBody.getResults();
+        return results.stream()
+                .map(result -> new TmdbContentDTO(result, category))
+                .collect(Collectors.toList());
+    }
 
-		return tmdbWebClient
-				.get().uri(uriBuilder -> uriBuilder.path("/search/movie")
-						.queryParams(queryParams).build())
-				.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
-					List<Map<String, Object>> results = responseBody.getResults();
-					List<TmdbContentDTO> tmdbContentList = results.stream().map(result -> new TmdbContentDTO(result, "movie"))
-							.collect(Collectors.toList());
-					return Mono.just(tmdbContentList);
-				}).block();
-	}
-	
-	public List<TmdbContentDTO> getSearchTvListByQuery(String query, int page) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("language", "ko-KR");
-		queryParams.add("query", query);
-		queryParams.add("page", String.valueOf(page));
+    public List<TmdbContentDTO> getSearchMovieListByQuery(String query, int page) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("query", query);
+        queryParams.add("page", String.valueOf(page));
 
-		return tmdbWebClient
-				.get().uri(uriBuilder -> uriBuilder.path("/search/movie")
-						.queryParams(queryParams).build())
-				.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
-					List<Map<String, Object>> results = responseBody.getResults();
-					List<TmdbContentDTO> tmdbContentList = results.stream().map(result -> new TmdbContentDTO(result, "movie"))
-							.collect(Collectors.toList());
-					return Mono.just(tmdbContentList);
-				}).block();
-	}
+        TmdbResponseDTO responseBody = getTmdbResponse("/search/movie", queryParams, TmdbResponseDTO.class);
+        List<Map<String, Object>> results = responseBody.getResults();
+        return results.stream()
+                .map(result -> new TmdbContentDTO(result, "movie"))
+                .collect(Collectors.toList());
+    }
 
-	public List<String> getAllTrendingVideoList(List<TmdbContentDTO> allTrendingList) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("language", "ko-KR");
+    public List<TmdbContentDTO> getSearchTvListByQuery(String query, int page) {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("query", query);
+        queryParams.add("page", String.valueOf(page));
 
-		Random random = new Random();
-		List<String> videoKey = new ArrayList<>();
-		for (TmdbContentDTO content : allTrendingList) {
-			tmdbWebClient.get()
-					.uri(uriBuilder -> uriBuilder
-							.path("/" + content.getMediaType() + "/" + content.getTmdbId() + "/videos")
-							.queryParams(queryParams).build())
-					.retrieve().bodyToMono(TmdbResponseDTO.class).flatMap(responseBody -> {
-						// 한 컨텐츠에 대한 비디오 리스트
-						List<Map<String, Object>> videoList = responseBody.getResults();
-						// 하나만 추출하여 리스트에 저장
-						if (videoList.size() > 0) {
-							int randNum = random.nextInt(videoList.size());
-							videoKey.add((String) videoList.get(randNum).get("key"));
-						}
-						return Mono.empty();
-					}).block();
-		}
-		return videoKey.subList(0, 3);
-	}
-	
+        TmdbResponseDTO responseBody = getTmdbResponse("/search/tv", queryParams, TmdbResponseDTO.class);
+        List<Map<String, Object>> results = responseBody.getResults();
+        return results.stream()
+                .map(result -> new TmdbContentDTO(result, "tv"))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getAllTrendingVideoList(List<TmdbContentDTO> allTrendingList) {
+        Random random = new Random();
+        List<String> videoKey = new ArrayList<>();
+        for (TmdbContentDTO content : allTrendingList) {
+            TmdbResponseDTO responseBody = getTmdbResponse("/" + content.getMediaType() + "/" + content.getTmdbId() + "/videos", TmdbResponseDTO.class);
+            List<Map<String, Object>> videoList = responseBody.getResults();
+            if (videoList.size() > 0) {
+                int randNum = random.nextInt(videoList.size());
+                videoKey.add((String) videoList.get(randNum).get("key"));
+            }
+        }
+        return videoKey.subList(0, 3);
+    }
 }

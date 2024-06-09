@@ -13,7 +13,7 @@ public class WebClientConfig {
 
 	@Autowired
 	private Environment env;
-
+	
 	@Bean
 	public WebClient tmdbWebClient() {
 		String baseUrl = env.getProperty("tmdb.baseUrl");

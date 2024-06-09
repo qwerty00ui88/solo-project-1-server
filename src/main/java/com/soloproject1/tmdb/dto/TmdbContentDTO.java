@@ -21,7 +21,7 @@ public class TmdbContentDTO {
 	private String backdropPath;
 	
 	private Double popularity;
-
+	
 	public TmdbContentDTO(Map<String, Object> result) {
 		this.setMediaType((String) result.get("media_type"));
 		this.setTmdbId((int) result.get("id"));
