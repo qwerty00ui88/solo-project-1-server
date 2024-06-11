@@ -20,14 +20,14 @@ public class TmdbContentDTO {
 
 	private String backdropPath;
 	
-	private Double popularity;
+	private Double voteAverage;
 	
 	public TmdbContentDTO(Map<String, Object> result) {
 		this.setMediaType((String) result.get("media_type"));
 		this.setTmdbId((int) result.get("id"));
 		this.setPosterPath((String) result.get("poster_path"));
 		this.setBackdropPath((String) result.get("backdrop_path"));
-		this.setPopularity((Double) result.get("popularity"));
+		this.setVoteAverage((Double) result.get("vote_average"));
 		if(result.get("media_type").equals("movie")) {
 			this.setTitle((String) result.get("title"));
 			this.setOriginalTitle((String) result.get("original_title"));
@@ -44,7 +44,7 @@ public class TmdbContentDTO {
 		this.setTmdbId((int) result.get("id"));
 		this.setPosterPath((String) result.get("poster_path"));
 		this.setBackdropPath((String) result.get("backdrop_path"));
-		this.setPopularity((Double) result.get("popularity"));
+		this.setVoteAverage((Double) result.get("vote_average"));
 		if (type.equals("movie")) {
 			this.setTitle((String) result.get("title"));
 			this.setOriginalTitle((String) result.get("original_title"));

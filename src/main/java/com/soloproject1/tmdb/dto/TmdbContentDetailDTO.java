@@ -12,8 +12,6 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class TmdbContentDetailDTO extends TmdbContentDTO {
-	private Double voteAverage;
-
 	private Integer voteCount;
 	
 	private String releaseDate;
@@ -30,7 +28,6 @@ public class TmdbContentDetailDTO extends TmdbContentDTO {
 	
 	public TmdbContentDetailDTO(Map<String, Object> result) {
 		super(result);
-		this.setVoteAverage((Double) result.get("vote_average"));
 		this.setVoteCount((Integer) result.get("vote_count"));
 		this.setOverview((String) result.get("overview"));
 		this.setGenres((ArrayList) result.get("genres"));
@@ -48,7 +45,6 @@ public class TmdbContentDetailDTO extends TmdbContentDTO {
 	
 	public TmdbContentDetailDTO(Map<String, Object> result, String mediaType) {
 		super(result, mediaType);
-		this.setVoteAverage((Double) result.get("vote_average"));
 		this.setVoteCount((Integer) result.get("vote_count"));
 		this.setOverview((String) result.get("overview"));
 		this.setGenres((ArrayList) result.get("genres"));
