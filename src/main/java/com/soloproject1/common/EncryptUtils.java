@@ -13,7 +13,6 @@ public class EncryptUtils {
 			digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(message.getBytes(StandardCharsets.UTF_8));
 
-			// byte -> hex
 			hexString = new StringBuilder(2 * hash.length);
 			for (int i = 0; i < hash.length; i++) {
 				String hex = Integer.toHexString(0xff & hash[i]);

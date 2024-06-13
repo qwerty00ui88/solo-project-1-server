@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.soloproject1.content.mapper.ContentMapper">
-	<select id="selectBestContentByRegionGenderBirth" parameterType="map" resultType="com.soloproject1.statistics.domain.ContentStatistics">
+	<!-- <select id="selectBestContentByRegionGenderBirth" parameterType="map" resultType="com.soloproject1.statistic.domain.ContentStatistics">
 		SELECT
 			content.mediaType
 			, content.tmdbId
@@ -67,5 +67,5 @@
 		GROUP BY content.id
 		ORDER BY count DESC
 		LIMIT 1;
-	</select>
+	</select> -->
 </mapper>

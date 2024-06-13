@@ -9,16 +9,15 @@ import org.springframework.stereotype.Service;
 import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.content.bo.ContentBO;
-import com.soloproject1.content.dto.ContentDTO;
 import com.soloproject1.content.entity.ContentEntity;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.favorite.domain.Favorite;
-import com.soloproject1.mypage.domain.MyComment;
-import com.soloproject1.mypage.domain.MyRecommend;
+import com.soloproject1.mypage.dto.MyComment;
+import com.soloproject1.mypage.dto.MyRecommendDTO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
-
-import reactor.core.publisher.Mono;
+import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.dto.TmdbContentDTO;
 
 @Service
 public class MyPageBO {
@@ -34,32 +33,32 @@ public class MyPageBO {
 
 	@Autowired
 	private CommentBO commentBO;
+	
+	@Autowired
+	private TmdbBO tmdbBO;
 
-	public List<ContentDTO> getFavoriteListByUserId(int userId) {
+	public List<TmdbContentDTO> getFavoriteListByUserId(int userId) {
 
 		// userId로 favoirte 리스트 가져오기
 		List<Favorite> favoriteList = favoriteBO.getFavoriteListByUserId(userId);
 
 		// 리스트를 순회하며 api 호출
-		List<ContentDTO> contentDetailList = new ArrayList<>();
+		List<TmdbContentDTO> contentDetailList = new ArrayList<>();
 		for (Favorite favorite : favoriteList) {
 			ContentEntity content = contentBO.getContentById(favorite.getContentId());
-			ContentDTO contentDetail = contentBO.getContentDetail(content.getMediaType(), content.getTmdbId());
+			TmdbContentDTO contentDetail = tmdbBO.getContentDetail(content.getMediaType(), content.getTmdbId());
 			contentDetailList.add(contentDetail);
 		}
 		return contentDetailList;
 	}
 
-	public List<MyRecommend> getRecommendListByUserId(int userId) {
+	public List<MyRecommendDTO> getRecommendListByUserId(int userId) {
 		List<Recommend> recommendList = recommendBO.getRecommendListByUserId(userId);
-		List<MyRecommend> myRecommendList = new ArrayList<>();
+		List<MyRecommendDTO> myRecommendList = new ArrayList<>();
 		for (Recommend recommend : recommendList) {
-			MyRecommend myRecommend = new MyRecommend();
+			MyRecommendDTO myRecommend = new MyRecommendDTO();
 
-			ContentEntity content = contentBO.getContentById(recommend.getContentId());
-			ContentDTO contentDetail = contentBO.getContentDetail(content.getMediaType(), content.getTmdbId());
-
-			myRecommend.setContentDetail(contentDetail);
+			myRecommend.setContentEntity(contentBO.getContentById(recommend.getContentId()));
 			myRecommend.setRecommend(recommend);
 
 			myRecommendList.add(myRecommend);
@@ -72,12 +71,10 @@ public class MyPageBO {
 		List<MyComment> myCommentList = new ArrayList<>();
 		for (CommentEntity comment : commentList) {
 			MyComment myComment = new MyComment();
-
-			ContentEntity content = contentBO.getContentById(comment.getContentId());
-			ContentDTO contentDetail = contentBO.getContentDetail(content.getMediaType(), content.getTmdbId());
+			
 			Recommend recommend = recommendBO.getRecommendByUserIdAndContentId(userId, comment.getContentId());
 			
-			myComment.setContentDetail(contentDetail);
+			myComment.setContentEntity(contentBO.getContentById(comment.getContentId()));
 			myComment.setComment(comment);
 			myComment.setRecommend(recommend);
 

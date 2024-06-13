@@ -34,6 +34,17 @@ public class ContentEntity {
 	@Column(name = "tmdbId")
 	private int tmdbId;
 	
+	private String title;
+	
+	@Column(name = "originalTitle")
+	private String originalTitle;
+	
+	@Column(name = "posterPath")
+	private String posterPath;
+	
+	@Column(name = "backdropPath")
+	private String backdropPath;
+	
 	@UpdateTimestamp
 	@Column(name = "createdAt", updatable = false)
 	private ZonedDateTime createdAt;

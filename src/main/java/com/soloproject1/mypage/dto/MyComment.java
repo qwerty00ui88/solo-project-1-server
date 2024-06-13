@@ -1,4 +1,4 @@
-package com.soloproject1.mypage.domain;
+package com.soloproject1.mypage.dto;
 
 import com.soloproject1.comment.entity.CommentEntity;
 
@@ -9,6 +9,6 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
-public class MyComment extends MyRecommend {
+public class MyComment extends MyRecommendDTO {
 	private CommentEntity comment;
 }

@@ -13,6 +13,8 @@ import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
+import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 import com.soloproject1.user.bo.UserBO;
 
 @Service
@@ -27,12 +29,16 @@ public class CommentBO {
 	@Autowired
 	private UserBO userBO;
 	
+	@Autowired
+	private TmdbBO tmdbBO;
+	
 	public Map<String, Object> addComment(int userId, String mediaType, int tmdbId, String text) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
-			contentId = contentBO.addContent(mediaType, tmdbId);
+			contentId = contentBO.addContent(mediaType, tmdbId, contentDetailDTO.getTitle(), contentDetailDTO.getOriginalTitle(), contentDetailDTO.getPosterPath(), contentDetailDTO.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}
