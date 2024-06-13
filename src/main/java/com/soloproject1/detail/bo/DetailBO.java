@@ -10,12 +10,12 @@ import com.soloproject1.comment.bo.CommentBO;
 import com.soloproject1.comment.domain.CommentView;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
-import com.soloproject1.detail.domain.DetailView;
+import com.soloproject1.detail.dto.DetailDTO;
 import com.soloproject1.favorite.bo.FavoriteBO;
 import com.soloproject1.recommend.bo.RecommendBO;
 import com.soloproject1.recommend.domain.Recommend;
-
-import jakarta.servlet.http.HttpSession;
+import com.soloproject1.tmdb.bo.TmdbBO;
+import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 
 @Service
 public class DetailBO {
@@ -31,34 +31,37 @@ public class DetailBO {
 
 	@Autowired
 	private CommentBO commentBO;
+	
+	@Autowired
+	private TmdbBO tmdbBO;
 
-	public DetailView generateDetailViewList(Integer userId, String mediaType, int tmdbId) {
+	public DetailDTO generateDetailPageDTO(Integer userId, String mediaType, int tmdbId) {
 
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
+		TmdbContentDetailDTO contentDetail = tmdbBO.getContentDetail(mediaType, tmdbId);
 		if (content == null) {
-			contentId = contentBO.addContent(mediaType, tmdbId);
+			contentId = contentBO.addContent(mediaType, tmdbId, contentDetail.getTitle(), contentDetail.getOriginalTitle(), contentDetail.getPosterPath(), contentDetail.getBackdropPath());
 		} else {
 			contentId = content.getId();
 		}
 
-		DetailView detailView = new DetailView();
+		DetailDTO detail = new DetailDTO();
 
+		// 컨텐츠 상세 정보
+		detail.setContentDetail(contentDetail);
+		
+		// 사용자의 추천, 인생 컨텐츠, 코멘트 작성 상태
 		if (userId != null) {
-			// 추천 상태
 			Recommend recommend = recommendBO.getRecommendByUserIdAndContentId(userId, contentId);
 			if (recommend != null) {
-				detailView.setRecommendStatus(recommend.getStatus());
+				detail.setRecommendStatus(recommend.getStatus());
 			}
-
-			// 인생 컨텐츠 등록 여부
-			detailView.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
-		
-			// 내 코멘트
-			detailView.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
+			detail.setFavorite(favoriteBO.getFavoriteByContentIdUserId(contentId, userId) != null);
+			detail.setMyComment(commentBO.getCommentByContentIdUserId(contentId, userId));
 		}
 		
-		// 코멘트
+		// 전체 코멘트
 		List<CommentView> commentViewList = commentBO.generateCommentViewListByContentId(contentId);
 		List<CommentView> goodCommentViewList = new ArrayList<>();
 		List<CommentView> badCommentViewList = new ArrayList<>();
@@ -76,11 +79,11 @@ public class DetailBO {
 			}
 		}
 
-		detailView.setGoodCommentViewList(goodCommentViewList);
-		detailView.setBadCommentViewList(badCommentViewList);
-		detailView.setUnratedCommentViewList(unratedCommentViewList);
+		detail.setGoodCommentViewList(goodCommentViewList);
+		detail.setBadCommentViewList(badCommentViewList);
+		detail.setUnratedCommentViewList(unratedCommentViewList);
 
-		return detailView;
+		return detail;
 	};
 
 }
