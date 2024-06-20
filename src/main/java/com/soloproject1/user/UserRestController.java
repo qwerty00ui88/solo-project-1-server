@@ -58,6 +58,7 @@ public class UserRestController {
 			session.setAttribute("userNickname", user.getNickname());
 
 			result.put("code", 200);
+			result.put("userId", user.getId());
 			result.put("result", "성공");
 		} else {
 			result.put("code", 500);
