@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,10 @@ public class UserRestController {
 	@Autowired
 	private EmailVerificationBO emailVerificationBO;
 
+	private static final String LOGIN_URL = "https://goodorbad.site/login";
+	
+	private static final String ERROR_URL = "https://goodorbad.site/error";
+	
 	@PostMapping("/create")
 	public Map<String, Object> create(@RequestBody User user) {
 		Integer userId = userBO.addUser(user);
@@ -104,19 +110,17 @@ public class UserRestController {
 	}
 
 	@GetMapping("/verify-email")
-	public Map<String, Object> verifyEmail(@RequestParam("userId") int userId, @RequestParam("token") String token) {
-
+	public ResponseEntity<Void> verifyEmail(@RequestParam("userId") int userId, @RequestParam("token") String token) {
 		boolean isVerified = userBO.verifyEmail(userId, token);
-
-		Map<String, Object> result = new HashMap<>();
 		if (isVerified) {
-			result.put("code", 200);
-			result.put("result", "성공");
+			return ResponseEntity.status(HttpStatus.FOUND)
+	                .header("Location", LOGIN_URL)
+	                .build();	
 		} else {
-			result.put("code", 500);
-			result.put("error_message", "이메일 인증에 실패하였습니다. 다시 시도해주세요.");
+			return ResponseEntity.status(HttpStatus.FOUND)
+	                .header("Location", ERROR_URL)
+	                .build();
 		}
-		return result;
 	}
 
 	@PostMapping("/resend-verification-email")
