@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,10 @@ public class UserRestController {
 	@Autowired
 	private EmailVerificationBO emailVerificationBO;
 
+	private static final String LOGIN_URL = "https://goodorbad.site/login";
+	
+	private static final String ERROR_URL = "https://goodorbad.site/error";
+	
 	@PostMapping("/create")
 	public Map<String, Object> create(@RequestBody User user) {
 		Integer userId = userBO.addUser(user);
@@ -56,9 +62,13 @@ public class UserRestController {
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userNickname", user.getNickname());
-
+			
+			Map<String, Object> userInfo = new HashMap<>();
+			userInfo.put("userId", user.getId());
+			userInfo.put("userNickname",user.getNickname());
+			
 			result.put("code", 200);
-			result.put("result", "성공");
+			result.put("result", userInfo);
 		} else {
 			result.put("code", 500);
 			result.put("error_message", "로그인에 실패했습니다. 관리자에게 문의하세요.");
@@ -83,11 +93,18 @@ public class UserRestController {
 	@GetMapping("/checkLoginStatus")
 	public Map<String, Object> checkLoginStatus(HttpSession session) {
 		Integer userId = (Integer) session.getAttribute("userId");
+		String userNickname = (String) session.getAttribute("userNickname");
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
-		result.put("result", userId != null);
-
+		if(userId != null && userNickname != null) {
+			Map<String, Object> userInfo = new HashMap<>();
+			userInfo.put("userId", userId);
+			userInfo.put("userNickname",userNickname);
+			result.put("result", userInfo);
+		} else {
+			result.put("result", null);
+		}
 		return result;
 	}
 
@@ -103,19 +120,17 @@ public class UserRestController {
 	}
 
 	@GetMapping("/verify-email")
-	public Map<String, Object> verifyEmail(@RequestParam("userId") int userId, @RequestParam("token") String token) {
-
+	public ResponseEntity<Void> verifyEmail(@RequestParam("userId") int userId, @RequestParam("token") String token) {
 		boolean isVerified = userBO.verifyEmail(userId, token);
-
-		Map<String, Object> result = new HashMap<>();
 		if (isVerified) {
-			result.put("code", 200);
-			result.put("result", "성공");
+			return ResponseEntity.status(HttpStatus.FOUND)
+	                .header("Location", LOGIN_URL)
+	                .build();	
 		} else {
-			result.put("code", 500);
-			result.put("error_message", "이메일 인증에 실패하였습니다. 다시 시도해주세요.");
+			return ResponseEntity.status(HttpStatus.FOUND)
+	                .header("Location", ERROR_URL)
+	                .build();
 		}
-		return result;
 	}
 
 	@PostMapping("/resend-verification-email")

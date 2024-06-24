@@ -35,9 +35,16 @@ public class RecommendRestController {
 			@RequestParam("tmdbId") int tmdbId, 
 			@RequestParam("status") String status,
 			HttpSession session) {
+		
+		Integer userId = (Integer)session.getAttribute("userId");
 
-		int userId = (int)session.getAttribute("userId");
-
+		if (userId == null) {
+		    Map<String, Object> result = new HashMap<>();
+		    result.put("code", 401); // 인증 실패
+		    result.put("error_message", "사용자 인증에 실패했습니다.");
+		    return result;
+		}
+		
 		Integer contentId = null;
 		ContentEntity content = contentBO.getContentByMediaTypeAndTmdbId(mediaType, tmdbId);
 		TmdbContentDetailDTO contentDetailDTO = tmdbBO.getContentDetail(mediaType, tmdbId);
