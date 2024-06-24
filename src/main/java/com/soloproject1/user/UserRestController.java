@@ -62,10 +62,13 @@ public class UserRestController {
 		if (user != null) {
 			session.setAttribute("userId", user.getId());
 			session.setAttribute("userNickname", user.getNickname());
-
+			
+			Map<String, Object> userInfo = new HashMap<>();
+			userInfo.put("userId", user.getId());
+			userInfo.put("userNickname",user.getNickname());
+			
 			result.put("code", 200);
-			result.put("userId", user.getId());
-			result.put("result", "성공");
+			result.put("result", userInfo);
 		} else {
 			result.put("code", 500);
 			result.put("error_message", "로그인에 실패했습니다. 관리자에게 문의하세요.");
@@ -90,11 +93,18 @@ public class UserRestController {
 	@GetMapping("/checkLoginStatus")
 	public Map<String, Object> checkLoginStatus(HttpSession session) {
 		Integer userId = (Integer) session.getAttribute("userId");
+		String userNickname = (String) session.getAttribute("userNickname");
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("code", 200);
-		result.put("result", userId != null);
-
+		if(userId != null && userNickname != null) {
+			Map<String, Object> userInfo = new HashMap<>();
+			userInfo.put("userId", userId);
+			userInfo.put("userNickname",userNickname);
+			result.put("result", userInfo);
+		} else {
+			result.put("result", null);
+		}
 		return result;
 	}
 
