@@ -19,8 +19,5 @@ public class DetailDTO {
 	private boolean isFavorite;
 	private CommentEntity myComment;
 	
-	private List<CommentView> goodCommentViewList;
-	private List<CommentView> badCommentViewList;
-	private List<CommentView> unratedCommentViewList;
-	
+	private List<CommentView> commentViewList;
 }
