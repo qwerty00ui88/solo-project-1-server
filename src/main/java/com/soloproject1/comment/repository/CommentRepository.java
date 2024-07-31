@@ -8,7 +8,7 @@ import com.soloproject1.comment.entity.CommentEntity;
 
 public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
 	
-	public List<CommentEntity> findByContentId(int contentId);
+	public List<CommentEntity> findByContentIdOrderByUpdatedAtDesc(int contentId);
 	
 	public List<CommentEntity> findByUserIdOrderByUpdatedAtDesc(int userId);
 	

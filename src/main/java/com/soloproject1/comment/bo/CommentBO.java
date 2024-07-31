@@ -56,9 +56,9 @@ public class CommentBO {
 			return result;
 		}
 		
-		commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+		CommentEntity newComment = commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
 		result.put("code", 200);
-		result.put("result", "성공");
+		result.put("result", newComment);
 		return result;
 	}
 
@@ -87,7 +87,7 @@ public class CommentBO {
 	public List<CommentView> generateCommentViewListByContentId(int contentId) {
 		List<CommentView> commentViewList = new ArrayList<>();
 
-		List<CommentEntity> commentList = commentRepository.findByContentId(contentId);
+		List<CommentEntity> commentList = commentRepository.findByContentIdOrderByUpdatedAtDesc(contentId);
 
 		for (CommentEntity comment : commentList) {
 			CommentView commentView = new CommentView();
