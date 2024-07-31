@@ -15,4 +15,6 @@ public class CommentView {
 	
 	private CommentEntity comment;
 	
+	private String recommendStatus;
+	
 }
