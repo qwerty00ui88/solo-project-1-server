@@ -13,6 +13,8 @@ import com.soloproject1.comment.entity.CommentEntity;
 import com.soloproject1.comment.repository.CommentRepository;
 import com.soloproject1.content.bo.ContentBO;
 import com.soloproject1.content.entity.ContentEntity;
+import com.soloproject1.recommend.bo.RecommendBO;
+import com.soloproject1.recommend.domain.Recommend;
 import com.soloproject1.tmdb.bo.TmdbBO;
 import com.soloproject1.tmdb.dto.TmdbContentDetailDTO;
 import com.soloproject1.user.bo.UserBO;
@@ -31,6 +33,9 @@ public class CommentBO {
 	
 	@Autowired
 	private TmdbBO tmdbBO;
+	
+	@Autowired
+	private RecommendBO recommendBO;
 	
 	public Map<String, Object> addComment(int userId, String mediaType, int tmdbId, String text) {
 
@@ -51,9 +56,9 @@ public class CommentBO {
 			return result;
 		}
 		
-		commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
+		CommentEntity newComment = commentRepository.save(CommentEntity.builder().userId(userId).contentId(contentId).text(text).build());
 		result.put("code", 200);
-		result.put("result", "성공");
+		result.put("result", newComment);
 		return result;
 	}
 
@@ -82,7 +87,7 @@ public class CommentBO {
 	public List<CommentView> generateCommentViewListByContentId(int contentId) {
 		List<CommentView> commentViewList = new ArrayList<>();
 
-		List<CommentEntity> commentList = commentRepository.findByContentId(contentId);
+		List<CommentEntity> commentList = commentRepository.findByContentIdOrderByUpdatedAtDesc(contentId);
 
 		for (CommentEntity comment : commentList) {
 			CommentView commentView = new CommentView();
@@ -97,6 +102,10 @@ public class CommentBO {
 			
 			// 코멘트 리스트 세팅
 			commentView.setComment(comment);
+			
+			// 추천 상태 세팅
+			Recommend recommend = recommendBO.getRecommendByUserIdAndContentId(userId, contentId);
+			if(recommend != null) commentView.setRecommendStatus(recommend.getStatus());
 			
 			commentViewList.add(commentView);
 		}
